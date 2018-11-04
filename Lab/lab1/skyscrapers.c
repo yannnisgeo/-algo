@@ -4,6 +4,28 @@
 
 #define N_MAX 1000000
 
+// better input parsing than simple scanf(), taken from courses' moodle 
+#define BSIZE 1<<15
+char buffer[BSIZE];
+long bpos = 0L, bsize = 0L;
+long long readlong()
+{
+        long long d = 0L, x = 0L;
+        char c;
+
+        while (1)  {
+                if (bpos >= bsize) {
+                        bpos = 0;
+                        if (feof(stdin)) return x;
+                        bsize = fread(buffer, 1, BSIZE, stdin);
+                }
+                c = buffer[bpos++];
+                if (c >= '0' && c <= '9') { x = x*10 + (c-'0'); d = 1; }
+                else if (d == 1) return x;
+        }
+        return -1;
+}
+
 // A structure to represent a stack, with stuff from the slightly dark web
 struct Stack
 {
@@ -67,11 +89,11 @@ int main() {
 
     // Read input & fill Heght
     int i, N;
-    scanf("%d",&N);
+    N = (int) readlong();
     for (i = 0; i < N; i++) {
-        scanf("%lld",&Height[i]);
+        Height[i] = readlong();
     }
-    
+
     // Create Stack
     struct Stack* mystack = createStack(N);
     // Fill HL
@@ -126,5 +148,4 @@ int main() {
     //print min
     printf("%lld", min);
     return 0;
-
 }
