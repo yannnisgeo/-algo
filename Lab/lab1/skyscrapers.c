@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#define N_MAX 1000000
+
 // A structure to represent a stack, with stuff from the slightly dark web
 struct Stack
 {
@@ -29,13 +31,16 @@ int isFull(struct Stack* stack)
 int isEmpty(struct Stack* stack)
 {   return stack->top == -1;  }
 
+// Empties stack I DID THIS
+void reset(struct Stack* stack)
+{   stack->top = -1;}
+
 // Function to add an item to stack.  It increases top by 1
 void push(struct Stack* stack, int item)
 {
     if (isFull(stack))
         return;
     stack->array[++stack->top] = item;
-    printf("%d pushed to stack\n", item);
 }
 
 // Function to remove an item from stack.  It decreases top by 1
@@ -54,5 +59,75 @@ int peek(struct Stack* stack)
     return stack->array[stack->top];
 }
 
+// init arrays
+int Height[N_MAX], Left[N_MAX], Right[N_MAX],
+    HL[N_MAX], HR[N_MAX], Cost[N_MAX];
 
-int main()
+int main() {
+
+    // Read input & fill Heght
+    int i, N;
+    scanf("%d",&N);
+    for (i = 0; i < N; i++) {
+        scanf("%d",&Height[i]);
+    }
+
+    // Create Stack
+    struct Stack* mystack = createStack(N);
+    // Fill HL
+    for (i = 0; i < N; i++) {
+        // O(2n), in - out 1 time at most
+        while (!isEmpty(mystack) && Height[i] > Height[peek(mystack)]) {
+            pop(mystack);
+        }
+        if (!isEmpty(mystack)) HL[i] = peek(mystack); else HL[i] = -1;
+        push(mystack, i);
+    }
+
+    // Emptied stack for reuse, as array HL is ready.
+    reset(mystack);
+    // Fill HR.
+    for (i = N-1; i >= 0; i--) {
+        // O(2n), in - out 1 time at most
+        while (!isEmpty(mystack) && Height[i] > Height[peek(mystack)]) {
+            pop(mystack);
+        }
+        if (!isEmpty(mystack)) HR[i] = peek(mystack); else HR[i] = -1;
+        push(mystack, i);
+    }
+
+    // Parse from left
+    for (i = 0; i < N; i++) {
+        // No higher from left
+        if (HL[i] == -1) {
+            Left[i] = (i+1)*Height[i];
+        } else {
+            Left[i] = Left[HL[i]] + (i-HL[i]) * Height[i];
+        }
+    }
+
+    // Parse from right
+    for (i = N-1; i >= 0; i--) {
+        // No higher from right
+        if (HR[i] == -1) {
+            Right[i] = (N-i) * Height[i];
+        } else {
+            Right[i] = Right[HR[i]] + (HR[i]-i) * Height[i];
+        }
+    }
+
+    // Calculate total cost
+    for (i = 0; i < N; i++) {
+        Cost[i] = Left[i] + Right[i] - Height[i];
+    }
+
+    // get min Cost
+    int min = Cost[0];
+    for (i = 1; i < N; i++) {
+        if (Cost[i] < min) min = Cost[i];
+    }
+
+    //print min
+    printf("%d", min);
+    return 0;
+}
