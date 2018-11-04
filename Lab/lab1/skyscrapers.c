@@ -60,8 +60,8 @@ int peek(struct Stack* stack)
 }
 
 // init arrays
-int Height[N_MAX], Left[N_MAX], Right[N_MAX],
-    HL[N_MAX], HR[N_MAX], Cost[N_MAX];
+long long Height[N_MAX], Left[N_MAX], Right[N_MAX],
+    HL[N_MAX], HR[N_MAX];
 
 int main() {
 
@@ -69,9 +69,9 @@ int main() {
     int i, N;
     scanf("%d",&N);
     for (i = 0; i < N; i++) {
-        scanf("%d",&Height[i]);
+        scanf("%lld",&Height[i]);
     }
-
+    
     // Create Stack
     struct Stack* mystack = createStack(N);
     // Fill HL
@@ -116,18 +116,15 @@ int main() {
         }
     }
 
-    // Calculate total cost
-    for (i = 0; i < N; i++) {
-        Cost[i] = Left[i] + Right[i] - Height[i];
-    }
-
-    // get min Cost
-    int min = Cost[0];
+    // Calculate total cost & find min
+    long long min = Left[0] + Right[0] - Height[0];
     for (i = 1; i < N; i++) {
-        if (Cost[i] < min) min = Cost[i];
+        long long cost = Left[i] + Right[i] - Height[i];
+        if (cost < min) min = cost;
     }
 
     //print min
-    printf("%d", min);
+    printf("%lld", min);
     return 0;
+
 }
