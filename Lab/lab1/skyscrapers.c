@@ -4,7 +4,7 @@
 
 #define N_MAX 1000000
 
-// better input parsing than simple scanf(), taken from courses' moodle 
+// Better input parsing than simple scanf(), taken from courses' moodle
 #define BSIZE 1<<15
 char buffer[BSIZE];
 long bpos = 0L, bsize = 0L;
@@ -34,7 +34,7 @@ struct Stack
     int* array;
 };
 
-// function to create a stack of given capacity. It initializes size of
+// Function to create a stack of given capacity. It initializes size of
 // stack as 0
 struct Stack* createStack(unsigned capacity)
 {
@@ -81,7 +81,7 @@ int peek(struct Stack* stack)
     return stack->array[stack->top];
 }
 
-// init arrays
+// Initialize arrays
 long long Height[N_MAX], Left[N_MAX], Right[N_MAX],
     HL[N_MAX], HR[N_MAX];
 
@@ -145,7 +145,7 @@ int main() {
         if (cost < min) min = cost;
     }
 
-    //print min
-    printf("%lld", min);
+    // Print min
+    printf("%lld\n", min);
     return 0;
 }
